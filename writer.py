@@ -24,9 +24,9 @@ file.write(
 for chapter in book.chapters:
     file.write("<br><br><h2>" + chapter.name + "'</h2><br><br>")
     print("writing " + chapter.name)
+    file.write(chapter.content)
 
-    for line in chapter.content:
-        file.write(line + "<br>")
+
 
 file.write("</body></html>")
 file.close()

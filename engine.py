@@ -1,13 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
 from dataclasses import dataclass, field
+import re
 
 
 @dataclass()
 class Chapter:
     name: str
     link: str
-    content: list = field(default_factory=list)
+    content: str
 
 
 @dataclass()
@@ -22,15 +23,11 @@ headers = {'user-agent': 'my-agent/1.0.1'}
 
 
 def chapterTextExtractor(link: str):
-    story = []
-    l = requests.get(link, headers=headers)
-    lSoup = BeautifulSoup(l.content, 'html.parser')
+    ID = re.search("(?<=\/)\d+", link)[0]
 
-    for c1 in lSoup.find_all("pre"):
-        for c2 in c1.find_all("p"):
-            story.append(c2.getText())
-
-    return story
+    l = requests.get("https://www.wattpad.com/apiv2/storytext?id=" + ID, headers=headers)
+    lSoup = BeautifulSoup(l.text, 'html.parser')
+    return lSoup.prettify()
 
 
 def chaptersInfoExtractor(link: str):
